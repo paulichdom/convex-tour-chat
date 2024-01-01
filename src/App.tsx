@@ -1,7 +1,7 @@
-import { useQuery, useMutation } from "convex/react";
-import { api } from "../convex/_generated/api";
-import { useEffect, useState } from "react";
-import { faker } from "@faker-js/faker";
+import { useQuery, useMutation } from 'convex/react';
+import { api } from '../convex/_generated/api';
+import { useEffect, useState } from 'react';
+import { faker } from '@faker-js/faker';
 
 // For demo purposes. In a real app, you'd have real user data.
 const NAME = faker.person.firstName();
@@ -11,12 +11,12 @@ export default function App() {
   const sendMessage = useMutation(api.messages.send);
   const likeMessage = useMutation(api.messages.like);
 
-  const [newMessageText, setNewMessageText] = useState("");
+  const [newMessageText, setNewMessageText] = useState('');
 
   useEffect(() => {
     // Make sure scrollTo works on button click in Chrome
     setTimeout(() => {
-      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }, 0);
   }, [messages]);
 
@@ -31,18 +31,27 @@ export default function App() {
       {messages?.map((message) => (
         <article
           key={message._id}
-          className={message.author === NAME ? "message-mine" : ""}
+          className={message.author === NAME ? 'message-mine' : ''}
         >
           <div>{message.author}</div>
 
-          <p>{message.body}</p>
+          <p>
+            {message.body}
+            <button
+              onClick={async () => {
+                await likeMessage({ liker: NAME, messageId: message._id });
+              }}
+            >
+              🤍
+            </button>
+          </p>
         </article>
       ))}
       <form
         onSubmit={async (e) => {
           e.preventDefault();
           await sendMessage({ body: newMessageText, author: NAME });
-          setNewMessageText("");
+          setNewMessageText('');
         }}
       >
         <input
