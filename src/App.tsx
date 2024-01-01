@@ -2,6 +2,7 @@ import { useQuery, useMutation } from 'convex/react';
 import { api } from '../convex/_generated/api';
 import { useEffect, useState } from 'react';
 import { faker } from '@faker-js/faker';
+import { spawn } from 'child_process';
 
 // For demo purposes. In a real app, you'd have real user data.
 const NAME = faker.person.firstName();
@@ -42,7 +43,7 @@ export default function App() {
                 await likeMessage({ liker: NAME, messageId: message._id });
               }}
             >
-              🤍
+              {message.likes ? <span>{message.likes}</span> : null} 🤍
             </button>
           </p>
         </article>
