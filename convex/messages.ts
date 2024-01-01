@@ -21,3 +21,10 @@ export const send = mutation({
     await ctx.db.insert('messages', { body, author });
   },
 });
+
+export const like = mutation({
+  args: { liker: v.string(), messageId: v.id('messages') },
+  handler: async (ctx, { liker, messageId }) => {
+    // TODO
+  },
+});
