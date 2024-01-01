@@ -6,8 +6,21 @@ export const list = query({
   handler: async (ctx) => {
     // Grab the most recent messages.
     const messages = await ctx.db.query('messages').order('desc').take(100);
+    const messagesWithLikes = await Promise.all(
+      messages.map(async (message) => {
+        const likes = await ctx.db
+          .query('likes')
+          .withIndex('byMessageId', (q) => q.eq('messageId', message._id))
+          .collect();
+
+        return {
+          ...message,
+          likes: likes.length,
+        };
+      })
+    );
     // Reverse the list so that it's in a chronological order.
-    return messages.reverse().map((message) => ({
+    return messagesWithLikes.reverse().map((message) => ({
       ...message,
       body: message.body.replaceAll(':)', '😊'),
     }));
