@@ -2,6 +2,7 @@
 import OpenAI from 'openai';
 import { action } from './_generated/server';
 import { v } from 'convex/values';
+import { api } from './_generated/api';
 
 const apiKey = process.env.OPENAI_API_KEY!;
 const openai = new OpenAI({ apiKey });
@@ -27,5 +28,10 @@ export const chat = action({
     });
 
     const messageContent = response.choices[0].message?.content;
+
+    await ctx.runMutation(api.messages.send, {
+      author: 'ChatGPT',
+      body: messageContent || "Sorry, I don't have an answer for that",
+    });
   },
 });
